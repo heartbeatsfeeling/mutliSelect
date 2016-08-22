@@ -9,8 +9,18 @@
 <body>
 	<div class="select"></div>
 	<script>
-		$('.select').mutliSelect({
-			data:[]
+		var select=$('.select').mutliSelect({
+			data:[],
+			selectHTML:"<span>select</span>",
+			unSelectHTML:"<span>unSelect</span>",
+			selectALLHTML:"<span>selectALL</span>",
+			unSelectAllHTML:"<span>unSelectAll</span>",
+			callback:{
+				select:function(){},
+				unSelect:function(){},
+				selectAll:function(){},
+				unSelectAll:function(){}
+			}
 		});
 	</script>
 </body>

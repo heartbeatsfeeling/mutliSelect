@@ -33,5 +33,6 @@
 			
 		};
 		option=$.extend(true,defaultOption,option);
+		return this;
 	}
 }));
