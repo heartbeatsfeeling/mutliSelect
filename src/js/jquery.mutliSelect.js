@@ -7,32 +7,50 @@
 		factory(root.jQuery);
 	}
 }(window, function($) {
-	var pluginName='mutliSelect';
-	$.fn[pluginName]=function(option){
-		var defaultOption={};
-		var that=this;
-		var select=function(origin,target){
-
-		};
-		var unSelect=function(){
-
-		};
-		var selectAll=function(){
-
-		};
-		var unSelectAll=function(){
-
-		};
-		var renderLeft=function(){
-
-		};
-		var renderRight=function(){
-
-		};
-		var renderTool=function(){
+	var pluginName = 'mutliSelect';
+	var MutliSelect = function($this,option) {
+		this.option=option;
+		this.$element=$this;
+		this._init();
+	};
+	MutliSelect.prototype ={
+		select: function(origin, target) {
 			
-		};
-		option=$.extend(true,defaultOption,option);
+		},	
+		unSelect: function() {
+
+		},
+		selectAll: function() {
+
+		},
+		unSelectAll: function() {
+
+		},
+		_init:function(){
+			this.$element.append("<div class='"+pluginName+"'></div>");
+		},
+		_renderLeft: function() {
+
+		},
+		_renderRight: function() {
+
+		},
+		_renderTool: function() {
+
+		}
+	};
+	$.fn[pluginName] = function(option,params) {
+		var defaultOption = {};
+		this.each(function() {
+			var $this=$(this);
+			var select =$this.data(pluginName);
+			if (typeof option === 'string'&&select[option]) {
+				select[option](params);
+			} else if (typeof option === 'object') {
+				option = $.extend(true, defaultOption, option);
+				$this.data(pluginName,new MutliSelect($this,option));
+			};
+		});
 		return this;
 	}
 }));
