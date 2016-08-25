@@ -9,8 +9,10 @@
 }(window, function($) {
 	var pluginName = 'mutliSelect';
 	var MutliSelect = function($this, option) {
-		option.callback=option.callback||{};
+		console.log(option)
+		option.callback=option.callback
 		this.option = option;
+		this.data=this.option.data
 		this.$element = $this;
 		this._init();
 	};
@@ -30,18 +32,18 @@
 		_init: function() {
 			var html ="<div class='mutliSelect'>" +
 					"	<div class='mutliSelect-left'>" +
-					"		<div class=\"mutliSelect-left-search\">" +
+					"		<div class=\"mutliSelect-left-search mutliSelect-search\">" +
 					"			<input type=\"text\" />" +
 					"		</div>" +
-					"		<div class=\"mutliSelect-left-item\">" +
+					"		<div class=\"mutliSelect-left-item mutliSelect-item\">" +
 					"			<ul></ul>" +
 					"		</div>" +
 					"	</div>" +
 					"	<div class='mutliSelect-right'>" +
-					"		<div class=\"mutliSelect-right-search\">" +
+					"		<div class=\"mutliSelect-right-search mutliSelect-search\">" +
 					"			<input type=\"text\" />" +
 					"		</div>" +
-					"		<div class=\"mutliSelect-right-item\">" +
+					"		<div class=\"mutliSelect-right-item mutliSelect-item\">" +
 					"			<ul></ul>" +
 					"		</div>" +
 					"	</div>" +
@@ -49,8 +51,9 @@
 			this.$element.append(html);
 			this._renderLeft();
 			this._renderRight();
+			this._bind();
 		},
-		_renderItem:function(item){
+		_renderCore:function(item){
 			var html="<li data-mutliSelect-id='"+item.id+"'>";
 			var itemTemplate=this.option.callback.itemTemplate
 			if(itemTemplate&&$.isFunction(itemTemplate)){
@@ -60,36 +63,65 @@
 			}
 			return html+="</li>"
 		},
-		_renderLeft: function() {
-			var data=$.grep((this.option.data||[]),function(item){
+		_renderItem:function($ele,invert){
+			var data=$.grep(this.data,function(item){
 				return item.selected
-			},true)
+			},invert)
 			var i=0;
 			var length=data.length;
-			var html="";
+			var html="<ul>";
 			for(i;i<length;i++){
-				html+=this._renderItem(data[i]);
+				html+=this._renderCore(data[i]);
 			};
-			this.$element.find('.mutliSelect-left-item').html(html);
+			html+="</ul>"
+			$ele.html(html);
+		},
+		_renderLeft: function() {
+			var $ele=this.$element.find('.mutliSelect-left-item');
+			var invert=true;
+			this._renderItem($ele,invert);
 		},
 		_renderRight: function() {
-			var data=$.grep((this.option.data||[]),function(item){
-				return item.selected
-			},false)
-			var i=0;
-			var length=data.length;
-			var html="";
-			for(i;i<length;i++){
-				html+=this._renderItem(data[i]);
-			};
-			this.$element.find('.mutliSelect-right-item').html(html);
+			var $ele=this.$element.find('.mutliSelect-right-item');
+			var invert=false;
+			this._renderItem($ele,invert);
 		},
 		_renderTool: function() {
 
+		},
+		_bind:function(){
+			var $d=$(document);
+			var that=this;
+			/*dblclick item*/
+			$d.on('click','.mutliSelect-item ul >li',function(){
+				var $this=$(this);
+				var id=$this.attr('data-mutliselect-id');
+				var flag=$this.closest('.mutliSelect-item').hasClass('mutliSelect-left-item');
+				if(that.option.sortBy){
+					$.each(that.data,function(i,item){
+						if(item.id===id){
+							item.selected=flag;
+						}
+					});
+					that._renderLeft();
+					that._renderRight();
+				}else{
+
+				}
+			});
 		}
 	};
 	$.fn[pluginName] = function(option, params) {
-		var defaultOption = {};
+		var defaultOption = {
+			sortBy:false,
+			data:[],
+			callback:{
+				select:function(){},
+				unSelect:function(){},
+				selectAll:function(){},
+				unSelectAll:function(){}
+			}
+		};
 		this.each(function() {
 			var $this = $(this);
 			var select = $this.data(pluginName);
