@@ -9,19 +9,18 @@
 }(window, function($) {
 	var pluginName = 'mutliSelect';
 	var MutliSelect = function($this, option) {
-		console.log(option)
-		option.callback=option.callback
+		option.callback=option.callback;
 		this.option = option;
-		this.data=this.option.data
+		this.data=this.option.data;
 		this.$element = $this;
 		this._init();
 	};
 	MutliSelect.prototype = {
-		select: function(origin, target) {
-
+		select: function(id) {
+			this._selectCore(id,true);
 		},
-		unSelect: function() {
-
+		unSelect: function(id) {
+			this._selectCore(id,false);
 		},
 		selectAll: function() {
 
@@ -63,6 +62,44 @@
 			}
 			return html+="</li>"
 		},
+		_selectCore:function(idArr,invert){
+			var ids='';
+			var arr=[];
+			if(!idArr){
+				return false;
+			};
+			if($.isArray(idArr)){
+				ids=' '+idArr.join(' ')+' ';
+			}else{
+				ids=' '+idArr+' ';
+			};
+			if(this.option.sort){
+				$.each(this.data,function(i,item){
+					if(ids.indexOf(item.id)!==-1){
+						item.selected=invert;
+					}
+				});
+			}else{
+				$.each(this.data,function(i,item){
+					if(ids.indexOf(item.id)!==-1){
+						item.selected=invert;
+						item._mutliSelectMoveFlag=true;
+						arr.push(item);
+					}
+				});
+				this.data=$.map(this.data,function(item){
+					if(!item._mutliSelectMoveFlag){
+						return item;
+					}
+				}).concat(arr);
+				$.each(this.data,function(i,item){
+					delete item._mutliSelectMoveFlag
+				});
+			}
+			this._renderLeft();
+			this._renderRight();
+
+		},
 		_renderItem:function($ele,invert){
 			var data=$.grep(this.data,function(item){
 				return item.selected
@@ -93,21 +130,11 @@
 			var $d=$(document);
 			var that=this;
 			/*dblclick item*/
-			$d.on('click','.mutliSelect-item ul >li',function(){
+			$d.on('dblclick','.mutliSelect-item ul >li',function(){
 				var $this=$(this);
 				var id=$this.attr('data-mutliselect-id');
 				var flag=$this.closest('.mutliSelect-item').hasClass('mutliSelect-left-item');
-				if(that.option.sortBy){
-					$.each(that.data,function(i,item){
-						if(item.id===id){
-							item.selected=flag;
-						}
-					});
-					that._renderLeft();
-					that._renderRight();
-				}else{
-
-				}
+				that._selectCore(id,flag);
 			});
 		}
 	};
