@@ -3,40 +3,40 @@
 ```
 ```js
 var select=$('.select').mutliSelect({
-		sort:false,
-		data:[{
-			text:"demo1",
-			selected:true,
-			id:"1"
-		},{
-			text:"demo2",
-			id:"2"
-		},{
-			text:"demo3",
-			selected:true,
-			id:"3"
-		},{
-			text:"demo4",
-			id:"4"
-		},{
-			text:"demo6",
-			id:"6"
-		},{
-			text:"demo5",
-			id:"5"
-		}],
-		selectHTML:"<span>select</span>",
-		unSelectHTML:"<span>unSelect</span>",
-		selectALLHTML:"<span>selectALL</span>",
-		unSelectAllHTML:"<span>unSelectAll</span>",
-		callback:{
-			itemTemplate:function(data){
-				return "<em>"+data.text+"</em>"
-			},
-			select:function(){},
-			unSelect:function(){},
-			selectAll:function(){},
-			unSelectAll:function(){}
-		}
-	});
+	sort:false,
+	data:[{
+		text:"demo1",
+		selected:true,
+		id:"1"
+	},{
+		text:"demo2",
+		id:"2"
+	},{
+		text:"demo3",
+		selected:true,
+		id:"3"
+	},{
+		text:"demo4",
+		id:"4"
+	},{
+		text:"demo6",
+		id:"6"
+	},{
+		text:"demo5",
+		id:"5"
+	}],
+	selectHTML:"<span>select</span>",
+	unSelectHTML:"<span>unSelect</span>",
+	selectALLHTML:"<span>selectALL</span>",
+	unSelectAllHTML:"<span>unSelectAll</span>",
+	callback:{
+		itemTemplate:function(data){
+			return "<em>"+data.text+"</em>"
+		},
+		select:function(){},
+		unSelect:function(){},
+		selectAll:function(){},
+		unSelectAll:function(){}
+	}
+});
 ```
