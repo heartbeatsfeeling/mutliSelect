@@ -1,6 +1,6 @@
 ```html
 <div class="select"></div>
-```html
+```
 ```js
 var select=$('.select').mutliSelect({
 		sort:false,
@@ -39,4 +39,4 @@ var select=$('.select').mutliSelect({
 			unSelectAll:function(){}
 		}
 	});
-```js
+```
