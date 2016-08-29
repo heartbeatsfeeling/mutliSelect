@@ -31,18 +31,24 @@
 		_init: function() {
 			var html ="<div class='mutliSelect'>" +
 					"	<div class='mutliSelect-left'>" +
-					"		<div class=\"mutliSelect-left-search mutliSelect-search\">" +
-					"			<input type=\"text\" />" +
+					"		<div class='mutliSelect-left-search mutliSelect-search'>" +
+					"			<input type='text' />" +
 					"		</div>" +
-					"		<div class=\"mutliSelect-left-item mutliSelect-item\">" +
+					"		<div class='mutliSelect-left-item mutliSelect-item'>" +
 					"			<ul></ul>" +
 					"		</div>" +
 					"	</div>" +
+					"	<div class='mutliSelect-tool'>" +
+					"		<div class='mutliSelect-tool-select'></div>" +
+					"		<div class='mutliSelect-tool-unselect'></div>" +
+					"		<div class='mutliSelect-tool-selectAll'></div>" +
+					"		<div class='mutliSelect-tool-unSelectAll'></div>" +
+					"	</div>" +
 					"	<div class='mutliSelect-right'>" +
-					"		<div class=\"mutliSelect-right-search mutliSelect-search\">" +
-					"			<input type=\"text\" />" +
+					"		<div class='mutliSelect-right-search mutliSelect-search'>" +
+					"			<input type='text' />" +
 					"		</div>" +
-					"		<div class=\"mutliSelect-right-item mutliSelect-item\">" +
+					"		<div class='mutliSelect-right-item mutliSelect-item'>" +
 					"			<ul></ul>" +
 					"		</div>" +
 					"	</div>" +
@@ -50,6 +56,7 @@
 			this.$element.append(html);
 			this._renderLeft();
 			this._renderRight();
+			this._renderTool();
 			this._bind();
 		},
 		_renderCore:function(item){
@@ -124,24 +131,48 @@
 			this._renderItem($ele,invert);
 		},
 		_renderTool: function() {
-
+			var $el=this.$element;
+			$el.find('.mutliSelect-tool-select').html(this.option.selectHTML)
+			$el.find('.mutliSelect-tool-unselect').html(this.option.unSelectHTML)
+			$el.find('.mutliSelect-tool-selectAll').html(this.option.selectALLHTML)
+			$el.find('.mutliSelect-tool-unSelectAll').html(this.option.unSelectAllHTML)
 		},
 		_bind:function(){
-			var $d=$(document);
 			var that=this;
-			/*dblclick item*/
-			$d.on('dblclick','.mutliSelect-item ul >li',function(){
+			var $el=this.$element;
+			this.$element.on('dblclick','.mutliSelect-item ul >li',function(){//dblclick item
 				var $this=$(this);
 				var id=$this.attr('data-mutliselect-id');
 				var flag=$this.closest('.mutliSelect-item').hasClass('mutliSelect-left-item');
 				that._selectCore(id,flag);
-			});
+			}).on('click','.mutliSelect-tool-select',function(){//select
+
+			}).on('click','.mutliSelect-tool-unselect',function(){//unSelect
+				
+			}).on('click','.mutliSelect-tool-selectAll',function(){//selectAll
+				console.log(23222)
+				$.each(that.data,function(i,item){
+					item.selected=true;
+				})
+				that._renderLeft();
+				that._renderRight();
+			}).on('click','.mutliSelect-tool-unSelectAll',function(){//unSelectAll
+				$.each(that.data,function(i,item){
+					item.selected=false;
+				})
+				that._renderLeft();
+				that._renderRight();
+			})
 		}
 	};
 	$.fn[pluginName] = function(option, params) {
 		var defaultOption = {
 			sortBy:false,
 			data:[],
+			selectHTML:"<span>select</span>",
+			unSelectHTML:"<span>unSelect</span>",
+			selectALLHTML:"<span>selectALL</span>",
+			unSelectAllHTML:"<span>unSelectAll</span>",
 			callback:{
 				select:function(){},
 				unSelect:function(){},
